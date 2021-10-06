@@ -1,6 +1,7 @@
 package ua.korzh.testtask.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ua.korzh.testtask.security.model.AppUser;
 import ua.korzh.testtask.security.model.Role;
@@ -20,6 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public AppUser register(@RequestParam("username") String username, @RequestParam("password") String password) {
 
         return userService.createUser(username, password, Set.of(Role.USER));

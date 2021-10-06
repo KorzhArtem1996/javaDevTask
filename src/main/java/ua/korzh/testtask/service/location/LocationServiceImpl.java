@@ -28,7 +28,8 @@ public class LocationServiceImpl implements LocationService {
     public List<Location> searchLocations(final String address) {
 
         ResponseEntity<List<Location>> res = rt.exchange(String.format(lookupUrl, address), HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Location>>() {});
+                new ParameterizedTypeReference<>() {
+                });
 
         var locations = res.getBody();
         if (locations == null) {

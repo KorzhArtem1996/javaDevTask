@@ -41,10 +41,10 @@ public class UserServiceImplTest {
     @Test
     public void createOneMoreUserWithTheSameUsername() {
 
-        var user1 = userService.createUser(USERNAME, PASSWORD, ROLES);
+        userService.createUser(USERNAME, PASSWORD, ROLES);
 
         assertThrows(SuchEmailAlreadyExists.class, () -> {
-            var user2 = userService.createUser(USERNAME, PASSWORD, ROLES);
+            userService.createUser(USERNAME, PASSWORD, ROLES);
         });
     }
 

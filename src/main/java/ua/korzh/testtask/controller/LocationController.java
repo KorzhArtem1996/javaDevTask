@@ -1,6 +1,7 @@
 package ua.korzh.testtask.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ua.korzh.testtask.model.Location;
 import ua.korzh.testtask.service.location.LocationService;
@@ -13,6 +14,7 @@ public class LocationController {
     private LocationService locationService;
 
     @PostMapping("/location")
+    @ResponseStatus(HttpStatus.CREATED)
     public List<Location> searchLocationsByAddress(@RequestParam("address") String address) {
 
         return locationService.searchLocations(address);
