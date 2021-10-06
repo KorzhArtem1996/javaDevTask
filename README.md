@@ -9,4 +9,4 @@ POST /location?address - call Nominatim API to search by address(to get Location
 
 GET /address - get all the stored addresses
 
-GET /address/coordinate?lat&lon - get the address by the coordinate
+GET /address/coordinate?lat&lon - get the address by the coordinates
