@@ -3,14 +3,18 @@ package ua.korzh.testtask.service.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ua.korzh.testtask.exception.SuchEmailAlreadyExists;
 import ua.korzh.testtask.security.model.AppUser;
 import ua.korzh.testtask.security.model.Role;
 import ua.korzh.testtask.repository.AppUserRepository;
 import javax.transaction.Transactional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class UserServiceImpl implements UserService {
+    
+    private static final ConcurrentHashMap.KeySetView<String, Boolean> EMAILS = ConcurrentHashMap.newKeySet();
 
     @Autowired
     private AppUserRepository appUserRepository;
@@ -35,6 +39,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public AppUser createUser(String username, String password, Set<Role> roles) {
 
+        if (!EMAILS.add(username)) {
+            throw new SuchEmailAlreadyExists(String.format("User with email '%s' already exists", username));
+        }
+
         var appUser = new AppUser(username, passwordEncoder.encode(password), roles);
         return appUserRepository.save(appUser);
     }
@@ -43,7 +51,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(String username) {
 
-        appUserRepository.getUserByUsername(username).ifPresent(user -> appUserRepository.delete(user));
+        if (EMAILS.remove(username)) {
+            appUserRepository.getUserByUsername(username).ifPresent(user -> appUserRepository.delete(user));
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllUsers() {
+
+        EMAILS.clear();
+        appUserRepository.deleteAll();
     }
 
     @Override

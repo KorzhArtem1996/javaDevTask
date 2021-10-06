@@ -13,6 +13,8 @@ public interface UserService {
 
     void deleteUser(String username);
 
+    void deleteAllUsers();
+
     AppUser updateUser(AppUser appUser);
 
     boolean userExists(String username);
